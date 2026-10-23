@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1724">
+<meta name="description" content="Controle pessoal de estoque, entradas e saídas de peças.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<title>Meu Estoque</title>
+<style>
+:root{color-scheme:dark;--bg:#07111b;--panel:#102130;--panel2:#152a3a;--line:#234154;--text:#f2f7fb;--muted:#9fb5c5;--blue:#32a7ff;--green:#27d99a;--red:#ff5d68;--orange:#ffb454}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#091827,#07111b 48%,#0b1b29);color:var(--text);font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+header{padding:22px 18px 16px;position:sticky;top:0;background:#081521ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:3}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:13px;background:#123f62;display:grid;place-items:center;font-size:23px}.brand h1{font-size:21px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+main{max-width:780px;margin:auto;padding:16px 14px 92px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat,.panel,.item{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px}.stat{padding:14px}.stat span{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:25px;margin-top:5px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:22px 2px 10px}.section-head h2{font-size:17px;margin:0}.muted{color:var(--muted)}.small{font-size:12px}
+.panel{padding:15px;margin-top:14px}.panel h2{font-size:17px;margin:0 0 13px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:12px;color:#c0d3df}input,select,textarea{width:100%;min-width:0;border:1px solid #315064;background:#091a27;color:var(--text);border-radius:11px;padding:12px;font:inherit;font-size:15px;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--blue)}button{border:0;border-radius:11px;padding:12px 14px;font:600 14px system-ui;cursor:pointer;color:white;background:#167fe0}button:active{transform:scale(.98)}button.secondary{background:#20394a;border:1px solid #345467}button.green{background:#078d68}button.red{background:#b82c3c}button.orange{background:#9a5b0b}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1}.tabs{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#07131fee;border-top:1px solid var(--line);z-index:4;backdrop-filter:blur(12px)}.tabs button{background:transparent;color:var(--muted);padding:9px 4px;font-size:12px}.tabs button.active{background:#123c5a;color:#8fd2ff}.tabs span{display:block;font-size:18px;margin-bottom:2px}.searchrow{display:flex;gap:8px}.searchrow input{flex:1}.filters{display:flex;gap:7px;overflow:auto;margin:10px 0}.filters button{white-space:nowrap;font-size:12px;padding:8px 11px}.filters button.selected{background:#167fe0}.item{padding:13px;margin:9px 0;display:flex;align-items:center;gap:11px}.itemicon{width:40px;height:40px;border-radius:12px;background:#1a3a50;display:grid;place-items:center;font-size:19px;flex-shrink:0}.itembody{min-width:0;flex:1}.itembody strong{display:block;overflow-wrap:anywhere}.itembody p{font-size:12px;color:var(--muted);margin:3px 0 0;overflow-wrap:anywhere}.qty{text-align:right;white-space:nowrap}.qty strong{display:block;font-size:18px}.pill{font-size:10px;border-radius:20px;padding:4px 7px;display:inline-block;margin-top:4px;background:#155c49;color:#8ff3c9}.pill.low{background:#693d15;color:#ffd092}.pill.zero{background:#672832;color:#ffb5bd}.empty{text-align:center;color:var(--muted);padding:25px 10px}.hidden{display:none!important}.movement{border-top:1px solid var(--line);padding:11px 0;display:flex;gap:10px;align-items:center}.movement:first-child{border-top:0}.movement .sign{font-size:19px}.movement .mtext{flex:1;min-width:0}.movement strong{font-size:13px;display:block;overflow-wrap:anywhere}.movement p{margin:3px 0 0;font-size:11px;color:var(--muted)}.notice{border:1px solid #6b4b20;background:#302514;color:#ffdaa0;border-radius:12px;padding:11px;font-size:12px;margin-top:12px}.danger-note{border:1px solid #69313a;background:#2b151a;color:#ffc2c8;border-radius:12px;padding:11px;font-size:12px;margin-top:12px}.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#eaf8ff;color:#092033;border-radius:12px;padding:12px 16px;box-shadow:0 8px 30px #0008;z-index:10;max-width:90%;font-size:13px}.subnav{display:flex;gap:8px;flex-wrap:wrap}.subnav button{flex:1}.filelabel{display:block}.filelabel input{display:none}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.stat strong{font-size:22px}main{padding-top:22px}.tabs{left:calc(50% - 390px);right:calc(50% - 390px);border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">📦</div><div><h1>Meu Estoque</h1><p>Controle pessoal de peças e materiais</p></div></div></header>
+<main>
+<section id="home">
+ <div class="stats">
+  <div class="stat"><span>Tipos de peças</span><strong id="statTypes">0</strong></div>
+  <div class="stat"><span>Unidades em estoque</span><strong id="statUnits">0</strong></div>
+  <div class="stat"><span>Entradas hoje</span><strong id="statIn">0</strong></div>
+  <div class="stat"><span>Estoque baixo</span><strong id="statLow">0</strong></div>
+ </div>
+ <div class="section-head"><h2>Movimentações recentes</h2><span class="small muted" id="movementCount"></span></div>
+ <div class="panel" id="recentMovements"></div>
+ <div class="notice">🔐 Os dados ficam salvos neste navegador, neste celular. Use <b>Mais → Backup</b> regularmente para guardar uma cópia.</div>
+</section>
+<section id="stock" class="hidden">
+ <div class="section-head"><h2>Estoque</h2><span class="small muted" id="stockCount"></span></div>
+ <div class="searchrow"><input id="search" placeholder="Buscar por código ou descrição…" autocomplete="off"><button id="clearSearch" class="secondary">Limpar</button></div>
+ <div class="filters"><button class="selected" data-filter="all">Todos</button><button data-filter="available">Com estoque</button><button data-filter="low">Estoque baixo</button><button data-filter="zero">Zerados</button></div>
+ <div id="stockList"></div>
+</section>
+<section id="movement" class="hidden">
+ <div class="panel">
+  <h2>Registrar movimentação</h2>
+  <form id="movementForm">
+   <div class="fields">
+    <div class="field full"><label for="code">Código da peça *</label><input id="code" required maxlength="100" placeholder="Ex.: 9 422 082 400" autocomplete="off"></div>
+    <div class="field full"><label for="description">Descrição *</label><input id="description" required maxlength="160" placeholder="Ex.: Reparo 400"></div>
+    <div class="field"><label for="kind">Movimentação</label><select id="kind"><option value="in">Entrada (+)</option><option value="out">Saída (−)</option></select></div>
+    <div class="field"><label for="quantity">Quantidade *</label><input id="quantity" type="number" required min="1" step="1" value="1"></div>
+    <div class="field"><label for="minStock">Alerta de estoque baixo</label><input id="minStock" type="number" min="0" step="1" value="2"></div>
+    <div class="field"><label for="location">Local (opcional)</label><input id="location" maxlength="80" placeholder="Ex.: gaveta A1"></div>
+    <div class="field full"><label for="note">Observação (opcional)</label><input id="note" maxlength="200" placeholder="Ex.: fornecedor, ordem de serviço…"></div>
+   </div>
+   <p class="small muted">Se o código já existir, a quantidade será somada/subtraída no mesmo cadastro. Confira a descrição antes de salvar.</p>
+   <button style="width:100%;margin-top:8px" type="submit">Salvar movimentação</button>
+  </form>
+ </div>
+ <div class="panel"><h2>Importante</h2><p class="small muted">Saídas maiores que o saldo disponível são bloqueadas para evitar estoque negativo. Se você digitou um código errado, edite o cadastro ou importe um backup corrigido.</p></div>
+</section>
+<section id="details" class="hidden">
+ <div class="section-head"><h2 id="detailTitle">Detalhes</h2><button id="backToStock" class="secondary">← Estoque</button></div>
+ <div id="detailContent"></div>
+</section>
+<section id="more" class="hidden">
+ <div class="panel"><h2>Backup e dados</h2><p class="small muted">Exporte uma cópia antes de trocar de celular, limpar os dados do navegador ou reinstalar.</p><div class="actions"><button id="exportJson">Exportar backup (JSON)</button><button id="exportCsv" class="secondary">Exportar estoque (CSV)</button></div>
+ <label class="filelabel"><button class="secondary" style="width:100%;margin-top:9px" type="button" onclick="document.getElementById('importFile').click()">Importar backup JSON</button><input id="importFile" type="file" accept=".json,application/json"></label>
+ <div class="notice">O backup JSON inclui cadastros, quantidades e histórico. Guarde o arquivo em um local seguro.</div></div>
+ <div class="panel"><h2>Configurações</h2><div class="field"><label for="defaultMin">Estoque baixo padrão para novos itens</label><input id="defaultMin" type="number" min="0" step="1" value="2"></div><button id="saveSettings" style="width:100%;margin-top:10px">Salvar configuração</button></div>
+ <div class="panel"><h2>Instalar no Android</h2><p class="small muted">Depois de hospedar esta pasta em um endereço HTTPS, abra o endereço no Chrome, toque no menu ⋮ e escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>. Para instalar como PWA e usar offline, o site precisa ser servido por HTTPS.</p></div>
+ <div class="danger-note"><b>Atenção:</b> os dados não são enviados para nuvem. Se os dados do site forem apagados pelo navegador, só será possível recuperá-los com um backup.</div>
+ <div class="panel"><h2>Apagar dados</h2><p class="small muted">Remove todos os cadastros e movimentações deste aparelho. Exporte um backup antes.</p><button class="red" id="wipe" style="width:100%">Apagar todo o estoque</button></div>
+</section>
+</main>
+<nav class="tabs">
+ <button class="active" data-page="home"><span>⌂</span>Início</button>
+ <button data-page="stock"><span>▣</span>Estoque</button>
+ <button data-page="movement"><span>⇄</span>Movimentar</button>
+ <button data-page="more"><span>•••</span>Mais</button>
+</nav>
+<div id="toast" class="toast hidden" role="status"></div>
+<script>
+const DB_KEY='meuEstoqueDB_v1';
+const today=()=>new Date().toLocaleDateString('en-CA');
+const dateTime=()=>new Date().toISOString();
+const fmtDate=s=>{try{return new Date(s).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}catch{return s||''}};
+const number=n=>new Intl.NumberFormat('pt-BR').format(n||0);
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const normalizeCode=s=>String(s||'').trim().replace(/\s+/g,' ').toLocaleUpperCase('pt-BR');
+let db={items:[],movements:[],settings:{defaultMin:2}}, currentItem=null, activeFilter='all';
+function load(){try{const d=JSON.parse(localStorage.getItem(DB_KEY)||'null');if(d&&Array.isArray(d.items)&&Array.isArray(d.movements))db={...db,...d,settings:{...db.settings,...d.settings}}}catch(e){console.warn(e)}}
+function save(){localStorage.setItem(DB_KEY,JSON.stringify(db));renderAll()}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.add('hidden'),2600)}
+function getItemByCode(code){const key=normalizeCode(code);return db.items.find(i=>i.codeKey===key)}
+function getItem(id){return db.items.find(i=>i.id===id)}
+function isLow(i){return i.qty<=Number(i.minStock||0)}
+function totalUnits(){return db.items.reduce((s,i)=>s+i.qty,0)}
+function recordMovement(item,kind,qty,note=''){db.movements.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),itemId:item.id,code:item.code,description:item.description,kind,qty,at:dateTime(),note})}
+function renderAll(){renderStats();renderStock();renderMovements();if(currentItem)renderDetails(currentItem)}
+function renderStats(){document.getElementById('statTypes').textContent=number(db.items.length);document.getElementById('statUnits').textContent=number(totalUnits());document.getElementById('statIn').textContent=number(db.movements.filter(m=>m.kind==='in'&&m.at.slice(0,10)===today()).reduce((s,m)=>s+m.qty,0));document.getElementById('statLow').textContent=number(db.items.filter(isLow).length);document.getElementById('movementCount').textContent=db.movements.length+' registros'}
+function renderStock(){const q=document.getElementById('search').value.trim().toLocaleLowerCase('pt-BR');let items=[...db.items].sort((a,b)=>a.description.localeCompare(b.description,'pt-BR'));items=items.filter(i=>(!q||i.code.toLocaleLowerCase('pt-BR').includes(q)||i.description.toLocaleLowerCase('pt-BR').includes(q))&&(activeFilter==='all'||(activeFilter==='available'&&i.qty>0)||(activeFilter==='low'&&isLow(i))||(activeFilter==='zero'&&i.qty===0)));document.getElementById('stockCount').textContent=items.length+' itens';const el=document.getElementById('stockList');if(!items.length){el.innerHTML='<div class="empty">📦<br><br>Nenhuma peça encontrada.<br><span class="small">Registre uma entrada para cadastrar a primeira peça.</span></div>';return}el.innerHTML=items.map(i=>`<button class="item" style="width:100%;text-align:left;color:inherit" data-open="${i.id}"><div class="itemicon">⚙️</div><div class="itembody"><strong>${escapeHtml(i.description)}</strong><p>Código: ${escapeHtml(i.code)}${i.location?' · '+escapeHtml(i.location):''}</p></div><div class="qty"><strong>${number(i.qty)} un.</strong><span class="pill ${i.qty===0?'zero':isLow(i)?'low':''}">${i.qty===0?'Zerado':isLow(i)?'Baixo':'Normal'}</span></div></button>`).join('');el.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetails(b.dataset.open)))}
+function movementHtml(m){return `<div class="movement"><span class="sign">${m.kind==='in'?'🟢':'🔴'}</span><div class="mtext"><strong>${escapeHtml(m.description)} · ${m.kind==='in'?'+':'−'}${number(m.qty)} un.</strong><p>${escapeHtml(m.code)} · ${fmtDate(m.at)}${m.note?' · '+escapeHtml(m.note):''}</p></div></div>`}
+function renderMovements(){const recent=db.movements.slice(0,8);document.getElementById('recentMovements').innerHTML=recent.length?recent.map(movementHtml).join(''):'<div class="empty">Ainda não há movimentações.<br>Use “Movimentar” para registrar a primeira entrada.</div>'}
+function openDetails(id){currentItem=id;renderDetails(id);showPage('details')}
+function renderDetails(id){const i=getItem(id);if(!i){currentItem=null;showPage('stock');return}document.getElementById('detailTitle').textContent=i.description;const moves=db.movements.filter(m=>m.itemId===id);document.getElementById('detailContent').innerHTML=`<div class="panel"><div class="item" style="margin:0;border:0;padding:0;background:none"><div class="itemicon">⚙️</div><div class="itembody"><strong>${escapeHtml(i.description)}</strong><p>Código: ${escapeHtml(i.code)}</p><p>${i.location?'Local: '+escapeHtml(i.location):'Local não informado'}</p></div></div><div class="section-head"><span class="muted">Quantidade atual</span><strong style="font-size:25px">${number(i.qty)} un.</strong></div><p class="small muted">Alerta de estoque baixo: ${number(i.minStock)} un.</p><div class="actions"><button class="green" id="detailIn">＋ Entrada</button><button class="red" id="detailOut">− Saída</button></div><button class="secondary" id="editItem" style="width:100%;margin-top:8px">Editar descrição, código ou alerta</button></div><div class="panel"><h2>Histórico de movimentações (${moves.length})</h2>${moves.length?moves.map(movementHtml).join(''):'<div class="empty">Sem movimentações.</div>'}</div>`;
+document.getElementById('detailIn').onclick=()=>prefillMovement(i,'in');document.getElementById('detailOut').onclick=()=>prefillMovement(i,'out');document.getElementById('editItem').onclick=()=>editItem(i)}
+function prefillMovement(i,kind){showPage('movement');document.getElementById('code').value=i.code;document.getElementById('description').value=i.description;document.getElementById('kind').value=kind;document.getElementById('minStock').value=i.minStock;document.getElementById('location').value=i.location||'';document.getElementById('quantity').value=1;document.getElementById('note').value='';}
+function editItem(i){const code=prompt('Código da peça:',i.code);if(code===null)return;const desc=prompt('Descrição:',i.description);if(desc===null)return;const min=prompt('Alertar quando o saldo for menor ou igual a:',String(i.minStock));if(min===null)return;const loc=prompt('Localização (opcional):',i.location||'');if(loc===null)return;if(!code.trim()||!desc.trim()||!Number.isInteger(Number(min))||Number(min)<0){toast('Confira código, descrição e alerta.');return}const newKey=normalizeCode(code);const conflict=db.items.find(x=>x.id!==i.id&&x.codeKey===newKey);if(conflict){toast('Esse código já pertence a outro cadastro. Edite o item existente para não misturar peças.');return}i.code=code.trim();i.codeKey=newKey;i.description=desc.trim();i.minStock=Number(min);i.location=loc.trim();db.movements.forEach(m=>{if(m.itemId===i.id){m.code=i.code;m.description=i.description}});save();toast('Cadastro atualizado.')}
+function showPage(page){document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));document.getElementById(page).classList.remove('hidden');document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.page===page||(page==='details'&&b.dataset.page==='stock')));if(page==='stock')renderStock();window.scrollTo(0,0)}
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{activeFilter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('selected',x===b));renderStock()}));
+document.getElementById('search').addEventListener('input',renderStock);document.getElementById('clearSearch').onclick=()=>{document.getElementById('search').value='';renderStock()};
+document.getElementById('movementForm').addEventListener('submit',e=>{e.preventDefault();const code=document.getElementById('code').value.trim(),description=document.getElementById('description').value.trim(),kind=document.getElementById('kind').value,qty=Number(document.getElementById('quantity').value),min=Number(document.getElementById('minStock').value),location=document.getElementById('location').value.trim(),note=document.getElementById('note').value.trim();if(!code||!description||!Number.isInteger(qty)||qty<1||!Number.isInteger(min)||min<0){toast('Confira os campos obrigatórios.');return}let item=getItemByCode(code);if(item&&item.description.trim().toLocaleLowerCase('pt-BR')!==description.trim().toLocaleLowerCase('pt-BR')){if(!confirm('Esse código já existe com a descrição “'+item.description+'”. Deseja usar o cadastro existente e somar a movimentação nele?'))return}else if(!item){if(kind==='out'){toast('Esse código ainda não está cadastrado. Registre uma entrada primeiro.');return}item={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),code:code,codeKey:normalizeCode(code),description,qty:0,minStock,location,createdAt:dateTime()};db.items.push(item)}if(kind==='out'&&item.qty<qty){toast('Saldo insuficiente: há '+number(item.qty)+' unidade(s).');return}if(kind==='in'){item.qty+=qty;item.minStock=min;if(location)item.location=location}else item.qty-=qty;recordMovement(item,kind,qty,note);save();e.target.reset();document.getElementById('quantity').value=1;document.getElementById('minStock').value=db.settings.defaultMin;toast(kind==='in'?'Entrada salva e estoque atualizado!':'Saída salva e estoque atualizado!');showPage('stock')});
+function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+document.getElementById('exportJson').onclick=()=>{download('backup-meu-estoque-'+today()+'.json',JSON.stringify({...db,exportedAt:dateTime(),formatVersion:1},null,2),'application/json');toast('Backup JSON exportado.')};
+document.getElementById('exportCsv').onclick=()=>{const rows=[['Código','Descrição','Quantidade','Alerta estoque baixo','Localização'],...db.items.map(i=>[i.code,i.description,i.qty,i.minStock,i.location||''])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');download('estoque-'+today()+'.csv','\ufeff'+csv,'text/csv;charset=utf-8');toast('Planilha CSV exportada.')};
+document.getElementById('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.items)||!Array.isArray(d.movements))throw Error('Formato inválido');if(!confirm('Importar este backup substituirá os dados atuais. Exporte o estoque atual antes, se quiser guardá-lo. Continuar?'))return;const seen=new Set();for(const i of d.items){if(!i.code||!i.description||!Number.isFinite(i.qty)||i.qty<0)throw Error('Cadastro inválido no backup');i.codeKey=normalizeCode(i.code);if(seen.has(i.codeKey))throw Error('O backup contém códigos duplicados.');seen.add(i.codeKey);i.minStock=Number(i.minStock||0);i.location=i.location||''}db={items:d.items,movements:d.movements,settings:{defaultMin:Number(d.settings?.defaultMin??2)}};save();toast('Backup importado.');}catch(err){alert('Não foi possível importar: '+err.message)}finally{e.target.value=''}});
+document.getElementById('defaultMin').value=db.settings.defaultMin;document.getElementById('saveSettings').onclick=()=>{const n=Number(document.getElementById('defaultMin').value);if(!Number.isInteger(n)||n<0){toast('Digite um número inteiro igual ou maior que zero.');return}db.settings.defaultMin=n;save();toast('Configuração salva.')};
+document.getElementById('wipe').onclick=()=>{if(confirm('Tem certeza? Todos os cadastros e movimentações serão apagados deste aparelho.')){if(confirm('Última confirmação: você já fez um backup?')){db={items:[],movements:[],settings:{defaultMin:2}};currentItem=null;save();toast('Dados apagados.')}}};
+document.getElementById('backToStock').onclick=()=>showPage('stock');
+load();document.getElementById('defaultMin').value=db.settings.defaultMin;document.getElementById('minStock').value=db.settings.defaultMin;renderAll();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.warn));
+</script>
+</body>
+</html>

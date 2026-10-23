@@ -1,0 +1,25 @@
+# Meu Estoque — Android
+
+Aplicativo web instalável (PWA) para controle pessoal de peças.
+
+## Recursos
+- Cadastro por código e descrição.
+- Entrada e saída com atualização automática do saldo.
+- Códigos repetidos (ignorando diferença entre maiúsculas/minúsculas e espaços extras) usam o mesmo cadastro.
+- Confirmação se um código existente vier com descrição diferente.
+- Bloqueio de saída maior que o saldo disponível.
+- Busca, alertas de estoque baixo e histórico por peça.
+- Exportação de backup JSON e estoque CSV; importação de backup JSON.
+- Armazenamento local no navegador; sem conta e sem envio automático para nuvem.
+- Cache offline depois da primeira abertura online, quando servido por HTTPS.
+
+## Instalar no Android
+O pacote é um site estático. Para instalação como PWA com funcionamento offline, hospede **todos os arquivos desta pasta** em um endereço HTTPS (por exemplo, GitHub Pages) e abra o endereço no Chrome Android. No menu ⋮, escolha **Instalar app** ou **Adicionar à tela inicial**.
+
+Não abra o `index.html` diretamente como `file://` esperando a instalação PWA: service workers e instalação exigem um contexto seguro (HTTPS, ou localhost durante desenvolvimento).
+
+## Preservação dos dados
+Os registros ficam no armazenamento local do navegador/aplicativo deste aparelho. Exporte o arquivo **Backup JSON** regularmente e guarde uma cópia fora do celular. Limpar os dados do navegador, remover o armazenamento do site ou desinstalar pode apagar o estoque local. O CSV é útil para abrir a lista de estoque em uma planilha; o JSON preserva também o histórico e as configurações.
+
+## Regras de códigos
+Espaços extras são normalizados e a comparação não diferencia maiúsculas/minúsculas. O restante do código é preservado. Por segurança, se um código existente for informado com uma descrição diferente, o sistema pede confirmação antes de usar o cadastro existente.
